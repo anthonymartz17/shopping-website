@@ -15,6 +15,7 @@
          <p>{{m.item}}</p>
          <p :class="{discount:m.show}">${{m.price}}</p> 
          <p v-show="m.show">${{m.discount}}</p> 
+         <p>{{m.inventory}}</p>
          <span>size: </span>
          
          <select>
@@ -36,7 +37,9 @@
          </div>
           <div class="btns">
             <button :disabled='!instock'  @click="addToCart" class="btn add-btn">Add to cart</button>
-            <button  @click="removeFromCart" class="btn del-btn">Remove from cart</button>
+            <button  @click="removeItemEvent" class="btn del-btn">Remove from cart</button>
+
+            
             
           </div>
 
@@ -52,14 +55,19 @@
 
 export default {
   
+ props:{
+       
+       numItems: Number
+       
+     },
+
+
+
  data(){
    return{
 
      instock: true,
-
-     numItems: 0,
     
-
     merch:[
 
     {item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
@@ -108,11 +116,10 @@ export default {
   },
  
    addToCart(){
-     this.$$emit('add-to-cart', this.numItems)
-
-
-
+     this.$emit('addToCart')
+  
      this.merch[0].inventory--
+
      if(this.merch[0].inventory === 0){
        this.instock = false
      }
@@ -121,9 +128,11 @@ export default {
      }
    },
 
-   removeFromCart(){
+   removeItemEvent(){
+     this.$emit('removeFromCart')
+
+      
     if(this.numItems > 0){
-      this.numItems--
       this.merch[0].inventory++
     }
        if(this.merch[0].inventory > 0){

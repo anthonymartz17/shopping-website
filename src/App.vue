@@ -5,7 +5,14 @@
        <span> {{numItems}}</span>
    </p>
     <h1>Martz Store</h1>
-   <top-com></top-com>
+   <top-com
+    @addToCart='addItemsCart' 
+    @removeFromCart='removeItemsCart'
+    :numItems='numItems'
+    
+   
+     ></top-com>
+     
   </div>
 </template>
 
@@ -13,11 +20,25 @@
 
 
 export default {
+
+
   name: 'App',
   
   data(){
     return{
-    
+     numItems: 0,
+     
+    }
+  },
+  methods:{
+    addItemsCart(){
+     this.numItems++
+    },
+    removeItemsCart(){
+      if(this.numItems > 0){
+
+        this.numItems--
+      }
     }
   }
 }
