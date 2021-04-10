@@ -4,7 +4,7 @@
       <i class="fas fa-shopping-cart"></i>       
        <span> {{numItems}}</span>
    </p>
-    <h1>Martz Store</h1>
+    <h1 class="store-name">Martz Store</h1>
    <top-com
     @addToCart='addItemsCart' 
     @removeFromCart='removeItemsCart'
@@ -27,6 +27,7 @@ export default {
   data(){
     return{
      numItems: 0,
+     cart:[]
      
     }
   },
@@ -50,9 +51,16 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
-h1{
+.store-name{
   font-size: 3em;
+  font-family: 'Poppins', sans-serif;
+}
+.store-name::before{
+  content: "-";
+  color: red;
+  width: 1em;
 }
 
 #app{
@@ -66,13 +74,22 @@ h1{
   position: absolute;
   top: 20px;
   right: 150px;
-  background: red;
-  width: 5vw;
+ min-width: 5vw;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: baseline;
+   border-bottom: 2px solid green;
+   border-left: 2px solid green;
+   padding: 0 0 .2em .5em;
+   
 }
 .cart span{
   margin-left: 1em;
-  border: 1px solid green;
-  width: 5
+  min-width: 2vw;
+  text-align: center;
+ 
+  
+  
   
 }
 </style>

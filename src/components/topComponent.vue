@@ -6,16 +6,17 @@
     <ul class="ul-container">
        <li class="item"  v-for="m in merch" :key="m.id">
          
-         <img width="400px"   :src="m.image" alt="tshirt">
+         <img width="400px"   :src="image" alt="tshirt">
+        
          <div class="details">
          <p v-if="m.inventory  >= 5">In stock</p>
          <p v-else-if="m.inventory > 0 && m.inventory <= 4">almost out stock</p>
          <p v-else>sold out</p>
 
          <p>{{m.item}}</p>
+         <p>{{material}}</p>
          <p :class="{discount:m.show}">${{m.price}}</p> 
          <p v-show="m.show">${{m.discount}}</p> 
-         <p>{{m.inventory}}</p>
          <span>size: </span>
          
          <select>
@@ -27,10 +28,10 @@
           <div class="variant-container">
          
          <div
-          v-for="variant in m.variants" :key="variant.varaintId"
+          v-for="(variant, index) in m.variants" :key="variant.varaintId"
           :style="{backgroundColor:variant.variantColorCode}"
           class="variantColor" 
-           @click="updateProduct(variant.variantImg)" >
+           @click="updateProduct(index)" >
 
          </div>
 
@@ -60,9 +61,6 @@ export default {
        numItems: Number
        
      },
-
-
-
  data(){
    return{
 
@@ -76,26 +74,29 @@ export default {
     discount:16.99,
     salePrice:11.99,
     show:false,
-    image: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
     inventory:10,
+    selectedVariant:0,
     variants:[
 
       {
         variantId:2234,
         variantColorCode:'#a4ebf3',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2'
+        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
+        variantMaterial:'Cotton'
 
       },
       {
         variantId:2235,
         variantColorCode:'#000000',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_1_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2'
+        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_1_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
+        variantMaterial:'silk'
 
       },
       {
         variantId:2236,
         variantColorCode:'#ffac41',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_33409_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2'
+        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_33409_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
+        variantMaterial:'wool'
 
       },
    
@@ -108,11 +109,24 @@ export default {
    }
 
  },
+ computed:{
+   
+   image(){
+       return this.merch[0].variants[this.merch[0].selectedVariant].variantImg
+     
+   },
+   material(){
+     return this.merch[0].variants[this.merch[0].selectedVariant].variantMaterial
+   }
+   
+ },
  methods:{
 
-  updateProduct(newImg){
+  updateProduct(index){
     
-    this.merch[0].image = newImg
+    this.merch[0].selectedVariant = index
+ 
+
   },
  
    addToCart(){
@@ -123,7 +137,7 @@ export default {
      if(this.merch[0].inventory === 0){
        this.instock = false
      }
-     if(this.numItems >= 4){
+     if(this.numItems > 3){
        this.merch[0].show = true
      }
    },
@@ -138,7 +152,7 @@ export default {
        if(this.merch[0].inventory > 0){
        this.instock = true
      }
-    if(this.numItems < 4 && this.numItems > 0){
+    if(this.numItems < 3 ){
        this.merch[0].show = false
      }
    }
