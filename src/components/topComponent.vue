@@ -25,6 +25,10 @@
            <option>Medium</option>
            <option>Large</option>
          </select>
+         <div>
+          <label >Quantity: </label>
+         <input type="number" value="1" min="1" :max="availableItems">
+         </div>
           <div class="variant-container">
          
          <div
@@ -58,7 +62,10 @@ export default {
   
  props:{
        
-       numItems: Number
+       numItems: Array,
+       merch:{
+         type: Array
+       }
        
      },
  data(){
@@ -66,46 +73,7 @@ export default {
 
      instock: true,
     
-    merch:[
-
-    {item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
-    id:1,
-    price:19.95, 
-    discount:16.99,
-    salePrice:11.99,
-    show:false,
-    inventory:10,
-    selectedVariant:0,
-    variants:[
-
-      {
-        variantId:2234,
-        variantColorCode:'#a4ebf3',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'Cotton'
-
-      },
-      {
-        variantId:2235,
-        variantColorCode:'#000000',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_1_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'silk'
-
-      },
-      {
-        variantId:2236,
-        variantColorCode:'#ffac41',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_33409_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'wool'
-
-      },
-   
-    ],
-
-    },
-
-   
-  ]
+ 
    }
 
  },
@@ -117,8 +85,10 @@ export default {
    },
    material(){
      return this.merch[0].variants[this.merch[0].selectedVariant].variantMaterial
-   }
-   
+   },
+   availableItems(){
+     return this.merch[0].variants[this.merch[0].selectedVariant].inventory
+   }   
  },
  methods:{
 
@@ -130,7 +100,9 @@ export default {
   },
  
    addToCart(){
-     this.$emit('addToCart')
+     this.$emit('addToCartEvent',this.merch[0].variants[this.merch[0].selectedVariant])
+     
+     
   
      this.merch[0].inventory--
 
