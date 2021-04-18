@@ -27,7 +27,7 @@
          </select>
          <div>
           <label >Quantity: </label>
-         <input type="number" value="1" min="1" :max="availableItems">
+         <input ref="Qty" type="number" value="1" min="1" :max="availableItems">
          </div>
           <div class="variant-container">
          
@@ -42,7 +42,7 @@
          </div>
           <div class="btns">
             <button :disabled='!instock'  @click="addToCart" class="btn add-btn">Add to cart</button>
-            <button  @click="removeItemEvent" class="btn del-btn">Remove from cart</button>
+            <!-- <button  @click="removeItemEvent" class="btn del-btn">Remove from cart</button> -->
 
             
             
@@ -102,7 +102,7 @@ export default {
    addToCart(){
      this.$emit('addToCartEvent',this.merch[0].variants[this.merch[0].selectedVariant])
      
-     
+     this.$emit('howmanyEvent',this.$refs.Qty[0].value)
   
      this.merch[0].inventory--
 
@@ -142,9 +142,7 @@ export default {
 .disabledBtn{
   opacity: .4;
 }
-.discount{
-  text-decoration: line-through;
-}
+
 .top,.ul-container{
   width: 60vw;
   height: 70vh;
