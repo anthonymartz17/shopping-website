@@ -18,16 +18,23 @@
          <p :class="{discount:m.show}">${{m.price}}</p> 
          <p v-show="m.show">${{m.discount}}</p> 
          <span>size: </span>
+
+          
+             <!-- when you add a v-model to a select tag, the value of the option tags become the value of the variable used as value for the v-model -->
+
+                    <!-- the selected attribute allows you to select the option you want to show by default. if you use v-model, you have to add the value attribute to the option tag so that the selected attribute could work-->
          
-         <select>
-           <option>Please select</option>
-           <option>Small</option>
-           <option>Medium</option>
-           <option>Large</option>
+         <select v-model="sizeSelected">
+           <option disabled selected value="">Please select</option>
+
+           <!-- here im using the computed property (selectSize) which contains the array (sizes) of each individual tshirt -->
+           <option v-for="option in selectSize" :key= "option.id">{{option.size}}</option>
          </select>
+         
+
          <div>
           <label >Quantity: </label>
-         <input ref="Qty" type="number" value="1" min="1" :max="availableItems">
+         <input ref="Qty" type="number" value="1" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
          </div>
           <div class="variant-container">
          
@@ -88,14 +95,26 @@ export default {
    },
    availableItems(){
      return this.merch[0].variants[this.merch[0].selectedVariant].inventory
-   }   
+   },   
+
+  //  i created the computed property (selectSize) to find the array (sizes) which is inside the (variant array) which in time is inside the (merch array). by using a computed property in this case, allows me to just loop through(selectSize) since the array is now in this property.  
+
+   selectSize(){
+     return this.merch[0].variants[this.merch[0].selectedVariant].sizes
+   },   
+   sizeSelected(){
+     let selected = this.merch[0].variants[this.merch[0].selectedVariant].selectedSize
+    this.$emit('sizeChoice', selected)
+    return selected
+     
+   }
  },
  methods:{
 
   updateProduct(index){
     
     this.merch[0].selectedVariant = index
- 
+    
 
   },
  

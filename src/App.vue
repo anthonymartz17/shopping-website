@@ -10,16 +10,16 @@
       :modal="modal"
      @click.native="showCart"
       :numItems='numItems'
+       @click="showCart"
     ></cart-comp>
 
-    <div class="cartModal" v-show="modal"
-    
-      @click="showCart"
-    >
+    <div class="cartModal" v-show="modal" >
 
-    
+   <!-- content that shows when you click on the cart -->
 
       <div class="cartContent">
+        <i @click="showCart" class="fa-2x far fa-window-close"></i>
+              <P class="empty-cart" v-show="numItems.length == 0">Your cart is empty</P>
 
         <div class="cartContentItem" v-for="item in numItems" :key="item.variantId">
 
@@ -28,10 +28,20 @@
           </div>
           <div class="cartContentItemDescription">
          <p>{{merch[0].item}}</p>
+        <span>Size:</span>
+
+        <!-- need to fix this span tag that shows tthe selected size. it is not showin the size according to the product-->
+        
+        <span>{{selectedSize}}</span>
          <p> Material: {{item.variantMaterial}}</p>
-         <p :class="{discount:merch[0].show}"> price: ${{merch[0].price}}</p>
-         <p v-if="item.howMany >= 3"> Discounted price: ${{merch[0].discount}}</p>
-         <p>Quantity: {{item.howMany}}</p>
+         <p :class="{discount:merch[0].variants[merch[0].selectedVariant].variantBool}"> price: ${{merch[0].variants[merch[0].selectedVariant].price}}</p>
+         <p v-if="item.howMany >= 3"> Discounted price: ${{merch[0].variants[merch[0].selectedVariant].discount}}</p>
+         <!-- <p>Quantity: {{item.howMany}}</p> -->
+          <div>
+          <label >Quantity: </label>
+         <input type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         </div>
+        
 
           </div>
           
@@ -45,7 +55,7 @@
     <h1 class="store-name">Martz Store</h1>
 
    <top-com
-    
+    @sizeChoice='selectionSize($event)'
     @addToCartEvent='addItemsCart($event)' 
     @howmanyEvent='addHowmany($event)'
     @removeFromCart='removeItemsCart'
@@ -76,7 +86,7 @@ export default {
     {item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
     id:1,
     price:19.95, 
-    discount:16.99,
+    // discount:16.99,
     salePrice:11.99,
     show:false,
     selectedVariant:0,
@@ -89,7 +99,15 @@ export default {
         variantMaterial:'Cotton',
         howMany: 0,
         inventory: 10,
-
+         price:19.95, 
+         discount:16.99,
+         variantBool: false,
+         selectedSize:'',
+         sizes:[
+      {size:'Small', id: 1,},
+      {size:'Medium', id: 2,},
+      {size:'Large', id: 3,}
+    ],
       },
       {
         variantId:2235,
@@ -98,6 +116,16 @@ export default {
         variantMaterial:'silk',
         inventory:15,
         howMany: 0,
+         price:19.95, 
+         discount:16.99,
+         variantBool: false,
+         selectedSize:'',
+         sizes:[
+      {size:'Small', id: 1,},
+      {size:'Medium', id: 2,},
+      {size:'Large', id: 3,},
+      
+    ],
 
       },
       {
@@ -107,6 +135,15 @@ export default {
         variantMaterial:'wool',
         inventory:20,
         howMany: 0,
+        price:19.95, 
+         discount:16.99,
+         variantBool: false,
+         selectedSize:'',
+         sizes:[
+      {size:'Small', id: 1,},
+      {size:'Medium', id: 2,},
+      {size:'Large', id: 3,}
+    ],
 
       },
    
@@ -120,6 +157,9 @@ export default {
     }
   },
   methods:{
+    selectionSize(selection){
+     return  this.selectedSize = selection
+    },
     addItemsCart(item){
      this.numItems.push(item)   
      
@@ -128,7 +168,7 @@ export default {
      addHowmany(qty){
     this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
     if(qty >= 3){
-      this.merch[0].show = true
+      this.merch[0].variants[this.merch[0].selectedVariant].variantBool = true
     }
      }
     ,
@@ -191,16 +231,22 @@ export default {
   width: 70%;
   height: 80vh;
    background: white;
-   padding: 2em;
+   padding: 1em;
    overflow-y: auto;
+   display:grid;
+   place-items: center;
+   gap: .2em;
+   position: relative;
    
+  
 }
 .cartContentItem{
-  box-shadow: 0 0 10px rgb(238, 233, 233);
+ 
+   border: 1px solid rgba(0, 0, 0, 0.089);
   display: flex;
   justify-content: space-evenly;
   width: 70%;
-  margin: auto;
+  
 }
 .cartContentItemImg{
 /* border: 1px solid red; */
@@ -214,5 +260,20 @@ justify-content: center;
 }
 .discount{
   text-decoration: line-through;
+  align-self: center;
+}
+
+.empty-cart{
+
+ text-transform: capitalize;
+ font-size: 1.5em;
+
+}
+
+.fa-window-close{
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
 }
 </style>
