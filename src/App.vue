@@ -21,7 +21,7 @@
         <i @click="showCart" class="fa-2x far fa-window-close"></i>
               <P class="empty-cart" v-show="numItems.length == 0">Your cart is empty</P>
 
-        <div class="cartContentItem" v-for="item in numItems" :key="item.variantId">
+        <div class="cartContentItem" v-for="item in numItems" :key="item.numId">
 
           <div class="cartContentItemImg">
           <img width="150px" :src="item.variantImg" alt="tshirt">
@@ -30,9 +30,10 @@
          <p>{{merch[0].item}}</p>
         <span>Size:</span>
 
-        <!-- need to fix this span tag that shows tthe selected size. it is not showin the size according to the product-->
+      
         
-        <span>{{selectedSize}}</span>
+        <span>{{item.selectedSize}}</span>
+
          <p> Material: {{item.variantMaterial}}</p>
          <p :class="{discount:merch[0].variants[merch[0].selectedVariant].variantBool}"> price: ${{merch[0].variants[merch[0].selectedVariant].price}}</p>
          <p v-if="item.howMany >= 3"> Discounted price: ${{merch[0].variants[merch[0].selectedVariant].discount}}</p>
@@ -55,16 +56,17 @@
     <h1 class="store-name">Martz Store</h1>
 
    <top-com
-    @sizeChoice='selectionSize($event)'
+
     @addToCartEvent='addItemsCart($event)' 
     @howmanyEvent='addHowmany($event)'
     @removeFromCart='removeItemsCart'
     :numItems='numItems'
     :merch='merch'
-    
-   
-     ></top-com>
      
+     ></top-com>
+      
+
+
   </div>
 </template>
 
@@ -79,6 +81,7 @@ export default {
   data(){
     return{
      numItems: [],
+     numId:10,
      modal:false,
 
         merch:[
@@ -90,6 +93,7 @@ export default {
     salePrice:11.99,
     show:false,
     selectedVariant:0,
+    TheSize:'',
     variants:[
 
       {
@@ -157,9 +161,14 @@ export default {
     }
   },
   methods:{
-    selectionSize(selection){
-     return  this.selectedSize = selection
-    },
+    press(){
+      console.log(this.newSize())
+    }
+    ,
+    // newSize(selection){
+    //   this.selectedSizeCart = selection
+    // },
+
     addItemsCart(item){
      this.numItems.push(item)   
      
@@ -247,6 +256,7 @@ export default {
   justify-content: space-evenly;
   width: 70%;
   
+  
 }
 .cartContentItemImg{
 /* border: 1px solid red; */
@@ -275,5 +285,11 @@ justify-content: center;
   right: 10px;
   top: 5px;
   cursor: pointer;
+}
+
+@media (max-width:1080px){
+  .cartContentItem{
+    flex-direction: column;
+  }
 }
 </style>
