@@ -5,7 +5,9 @@
        <span> {{numItems.length}}</span>
    </p> -->
 
-
+<div class="errorMsg">
+  <p>{{msg}}</p>
+</div>
     <cart-comp
       :modal="modal"
      @click.native="showCart"
@@ -28,11 +30,7 @@
           </div>
           <div class="cartContentItemDescription">
          <p>{{merch[0].item}}</p>
-        <span>Size:</span>
-
-      
-        
-        <span>{{item.selectedSize}}</span>
+        <span>Size: {{item.selectedSize}}</span>
 
          <p> Material: {{item.variantMaterial}}</p>
          <p :class="{discount:merch[0].variants[merch[0].selectedVariant].variantBool}"> price: ${{merch[0].variants[merch[0].selectedVariant].price}}</p>
@@ -83,6 +81,7 @@ export default {
      numItems: [],
      numId:10,
      modal:false,
+     msg:'Please select a size',
 
         merch:[
 
@@ -161,16 +160,22 @@ export default {
     }
   },
   methods:{
-    press(){
+    showError(){
       console.log(this.newSize())
     }
     ,
-    // newSize(selection){
-    //   this.selectedSizeCart = selection
-    // },
-
+    
     addItemsCart(item){
-     this.numItems.push(item)   
+
+      if(item.selectedSize === ''){
+        console.log('plese select a size')
+      }
+      else{
+
+        this.numItems.push(item)   
+      }
+
+     
      
 
     },
@@ -206,6 +211,21 @@ export default {
   
   
 }
+
+.errorMsg{
+  width: 100%;
+  height: 15vh;
+  background: red;
+  position: absolute;
+  top: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 1.5em;
+  font-weight: 700;
+   
+}
+
                                        
 .store-name{
   font-size: 3em;
