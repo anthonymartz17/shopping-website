@@ -5,7 +5,7 @@
        <span> {{numItems.length}}</span>
    </p> -->
 
-<div class="errorMsg">
+<div v-show="error" :class="{errorMsg:error}">
   <p>{{msg}}</p>
 </div>
     <cart-comp
@@ -82,6 +82,7 @@ export default {
      numId:10,
      modal:false,
      msg:'Please select a size',
+     error:false,
 
         merch:[
 
@@ -168,7 +169,11 @@ export default {
     addItemsCart(item){
 
       if(item.selectedSize === ''){
-        console.log('plese select a size')
+       this.error = true
+
+       setTimeout(() => {
+         this.error = false
+       }, 4000);
       }
       else{
 
@@ -213,6 +218,7 @@ export default {
 }
 
 .errorMsg{
+
   width: 100%;
   height: 15vh;
   background: red;
@@ -223,9 +229,23 @@ export default {
   color: white;
   font-size: 1.5em;
   font-weight: 700;
+  animation: error .8s ease-in;
    
 }
+@keyframes error {
 
+  0% {
+  transform: translateY(-1000px);
+  transform-origin: 50% 0;
+  opacity: 0;
+}
+100% {
+  transform: translateY(0) ;
+  transform-origin: 50% 50%;
+  opacity: 1;
+}
+  
+}
                                        
 .store-name{
   font-size: 3em;
