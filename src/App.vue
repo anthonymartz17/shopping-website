@@ -1,13 +1,20 @@
 <template>
   <div id="app">
-   <!-- <p   class="cart">
-      <i class="fas fa-shopping-cart"></i>       
-       <span> {{numItems.length}}</span>
-   </p> -->
+  
 
+<!-- ------------------------------------------------------------------------ -->
+<!--
+  ***this div contains the error msg when trying to add to the cart without selecting a size.
+
+  ***I used a v-show here so I can make the div display and display none.
+
+  *** the boolean property 'error' works for both, the v-show and the bounded class ' errorMsg'.
+ -->
 <div v-show="error" :class="{errorMsg:error}">
   <p>{{msg}}</p>
 </div>
+<!-- ------------------------------------------------------------------------- -->
+    
     <cart-comp
       :modal="modal"
      @click.native="showCart"
@@ -17,7 +24,9 @@
 
     <div class="cartModal" v-show="modal" >
 
-   <!-- content that shows when you click on the cart -->
+   
+
+   <!-------------------The code below is  content that shows when you click on the cart --------------------------------------->
 
       <div class="cartContent">
         <i @click="showCart" class="fa-2x far fa-window-close"></i>
@@ -33,9 +42,20 @@
         <span>Size: {{item.selectedSize}}</span>
 
          <p> Material: {{item.variantMaterial}}</p>
-         <p :class="{discount:merch[0].variants[merch[0].selectedVariant].variantBool}"> price: ${{merch[0].variants[merch[0].selectedVariant].price}}</p>
-         <p v-if="item.howMany >= 3"> Discounted price: ${{merch[0].variants[merch[0].selectedVariant].discount}}</p>
-         <!-- <p>Quantity: {{item.howMany}}</p> -->
+
+<!-- ----------------prices and discounts-------------------------------------------------- -->
+<!-- 
+  ***in order to show the price for each item, the computed property 'itemprice' was used 
+  
+  *** in order to show a discounted price and put a linethrough through the regular price, two p tags were used with conditional renderings. this allows me to show the regular price or the regular price with a linethrough and the discounted price, depending on the amount of items of the same kind added to the cart.
+  -->
+
+         <p v-if="item.howMany >= 3" class="discountedPrice" > price: ${{itemPrice}}</p>
+
+         <p v-else > price: ${{itemPrice}}</p>
+
+         <p v-if="item.howMany >= 3"> Discounted price: ${{itemDiscount}}</p>
+<!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
          <input type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
@@ -47,6 +67,9 @@
           </div>
 
       </div>
+<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+
 
 
     </div>
@@ -89,7 +112,6 @@ export default {
     {item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
     id:1,
     price:19.95, 
-    // discount:16.99,
     salePrice:11.99,
     show:false,
     selectedVariant:0,
@@ -103,7 +125,7 @@ export default {
         variantMaterial:'Cotton',
         howMany: 0,
         inventory: 10,
-         price:19.95, 
+        variantPrice:19.95, 
          discount:16.99,
          variantBool: false,
          selectedSize:'',
@@ -120,7 +142,7 @@ export default {
         variantMaterial:'silk',
         inventory:15,
         howMany: 0,
-         price:19.95, 
+         variantPrice:19.95, 
          discount:16.99,
          variantBool: false,
          selectedSize:'',
@@ -139,7 +161,7 @@ export default {
         variantMaterial:'wool',
         inventory:20,
         howMany: 0,
-        price:19.95, 
+        variantPrice:19.95, 
          discount:16.99,
          variantBool: false,
          selectedSize:'',
@@ -160,6 +182,17 @@ export default {
      
     }
   },
+
+  computed:{
+    itemPrice(){
+       return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
+    },
+    itemDiscount(){
+      return this.merch[0].variants[this.merch[0].selectedVariant].discount
+    }
+  },
+
+  
   methods:{
     showError(){
       console.log(this.newSize())
@@ -167,7 +200,7 @@ export default {
     ,
     
     addItemsCart(item){
-
+      
       if(item.selectedSize === ''){
        this.error = true
 
@@ -229,19 +262,17 @@ export default {
   color: white;
   font-size: 1.5em;
   font-weight: 700;
-  animation: error .8s ease-in;
+  animation: error .5s ease-in;
    
 }
 @keyframes error {
 
   0% {
   transform: translateY(-1000px);
-  transform-origin: 50% 0;
   opacity: 0;
 }
 100% {
   transform: translateY(0) ;
-  transform-origin: 50% 50%;
   opacity: 1;
 }
   
@@ -308,9 +339,9 @@ flex-direction: column;
 gap: .5em;
 justify-content: center;
 }
-.discount{
+.discountedPrice{
   text-decoration: line-through;
-  align-self: center;
+  /* align-self: center; */
 }
 
 .empty-cart{
