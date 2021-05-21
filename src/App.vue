@@ -242,7 +242,7 @@ export default {
     },
 
     delItemFromCart(index){
-      this.numItems.splice(1,index)
+      this.numItems.splice(index,1)
     }
   }
 }
