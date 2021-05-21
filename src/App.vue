@@ -32,7 +32,7 @@
         <i @click="showCart" class="fa-2x far fa-window-close"></i>
               <P class="empty-cart" v-show="numItems.length == 0">Your cart is empty</P>
 
-        <div class="cartContentItem" v-for="item in numItems" :key="item.numId">
+        <div class="cartContentItem" v-for="(item, index) in numItems" :key="item.numId">
 
           <div class="cartContentItemImg">
           <img width="150px" :src="item.variantImg" alt="tshirt">
@@ -59,9 +59,13 @@
           <div>
           <label >Quantity: </label>
          <input type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
-         </div>
-        
 
+         </div>
+
+<!-- delete btn removes itmes from the cart. however, for some reason it wont remove the first item of the array -->
+
+           <button @click="delItemFromCart(index)" class="del-item-btn">Delete</button>
+        
           </div>
           
           </div>
@@ -235,6 +239,10 @@ export default {
       this.modal = !this.modal
     
       
+    },
+
+    delItemFromCart(index){
+      this.numItems.splice(1,index)
     }
   }
 }
@@ -342,6 +350,13 @@ justify-content: center;
 .discountedPrice{
   text-decoration: line-through;
   /* align-self: center; */
+}
+
+.del-item-btn{
+align-self: flex-end;
+margin: .5em 2em;
+cursor: pointer;
+
 }
 
 .empty-cart{

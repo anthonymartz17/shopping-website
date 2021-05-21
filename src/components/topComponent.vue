@@ -9,9 +9,9 @@
          <img width="400px"   :src="image" alt="tshirt">
         
          <div class="details">
-         <p v-if="m.inventory  >= 5">In stock</p>
+         <!-- <p v-if="m.inventory  >= 5">In stock</p>
          <p v-else-if="m.inventory > 0 && m.inventory <= 4">almost out stock</p>
-         <p v-else>sold out</p>
+         <p v-else>sold out</p> -->
 
          <p>{{m.item}}</p>
          <p>{{material}}</p>
