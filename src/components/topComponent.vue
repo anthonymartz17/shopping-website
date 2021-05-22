@@ -135,6 +135,7 @@ export default {
  },
  methods:{
 
+   
   updateProduct(index){
     
     this.merch[0].selectedVariant = index

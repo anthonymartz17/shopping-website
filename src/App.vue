@@ -50,19 +50,19 @@
   *** in order to show a discounted price and put a linethrough through the regular price, two p tags were used with conditional renderings. this allows me to show the regular price or the regular price with a linethrough and the discounted price, depending on the amount of items of the same kind added to the cart.
   -->
 
-         <p v-if="item.howMany >= 3" class="discountedPrice" > price: ${{itemPrice}}</p>
+         <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p>
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.howMany >= 3"> Discounted price: ${{itemDiscount}}</p>
+         <p v-if="item.howMany >= 3 || trackQty >= 3 "> Discounted price: ${{itemDiscount}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
-         <input type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         <input ref="qtyCart" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
 
          </div>
 
-<!-- delete btn removes itmes from the cart. however, for some reason it wont remove the first item of the array -->
+
 
            <button @click="delItemFromCart(index)" class="del-item-btn">Delete</button>
         
@@ -188,6 +188,17 @@ export default {
   },
 
   computed:{
+
+    // got to figure out why my refs qtycart is undefined 
+    trackQty:{
+
+      get() {
+        return this.$refs.qtyCart[0].value 
+      },
+      set(myVal){
+         return this.$refs.qtyCart[0].value = myVal
+      }
+    },
     itemPrice(){
        return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
     },
@@ -221,6 +232,14 @@ export default {
      
 
     },
+    trackQty(){
+     if (this.$refs.qtyCart[0].value >= 3){
+             console.log('mayor o igual a 3')
+     }
+     else {
+       console.log('es menor a 3')
+     }
+   },
      addHowmany(qty){
     this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
     if(qty >= 3){
