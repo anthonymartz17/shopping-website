@@ -51,16 +51,16 @@
   -->
 
          <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
-         <p v-if="item.howMany >= 3" class="discountedPrice" > price: ${{itemPrice}}</p>
+         <p v-if="item.howMany >= 3 || showDiscount >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p>
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.howMany >= 3 "> Discounted price: ${{itemDiscount}}</p>
+         <p v-if="item.howMany >= 3  || showDiscount >= 3 "> Discounted price: ${{itemDiscount}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
           <!-- to be able to access the current target and current iteration, I sent both as arguments of the function i want to excute -->
-         <input @click="trackQty(item,$event)" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         <input @click="trackQty($event)" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
 
          </div>
         
@@ -190,6 +190,15 @@ export default {
   },
 
   computed:{
+    showDiscount:{
+      discount: 0,
+      get(){
+        return discount
+      },
+      set(newVal){
+         return discount = newVal
+      }
+    },
 
     // got to figure out why my refs qtycart is undefined 
 
@@ -207,10 +216,10 @@ export default {
 // through the use of $event you can access a lot of usefull information like path, target, etc...
 
   methods:{
-    trackQty(item,event){
-      
+    trackQty(event){
+    this.showDiscount = event.target.value
 
-      item.howMany = event.target.value
+       
       
     },
   //  -------------------------------------------------------------------------------------------------------
