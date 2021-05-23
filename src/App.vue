@@ -41,7 +41,7 @@
          <p>{{merch[0].item}}</p>
         <span>Size: {{item.selectedSize}}</span>
 
-         <p> Material: {{item.variantMaterial}}</p>
+         <p > Material: {{item.variantMaterial}}</p>
 
 <!-- ----------------prices and discounts-------------------------------------------------- -->
 <!-- 
@@ -50,17 +50,20 @@
   *** in order to show a discounted price and put a linethrough through the regular price, two p tags were used with conditional renderings. this allows me to show the regular price or the regular price with a linethrough and the discounted price, depending on the amount of items of the same kind added to the cart.
   -->
 
-         <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p>
+         <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
+         <p v-if="item.howMany >= 3" class="discountedPrice" > price: ${{itemPrice}}</p>
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.howMany >= 3 || trackQty >= 3 "> Discounted price: ${{itemDiscount}}</p>
+         <p v-if="item.howMany >= 3 "> Discounted price: ${{itemDiscount}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
-         <input ref="qtyCart" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+          <!-- to be able to access the current target and current iteration, I sent both as arguments of the function i want to excute -->
+         <input @click="trackQty(item,$event)" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
 
          </div>
+        
 
 
 
@@ -84,7 +87,6 @@
 
     @addToCartEvent='addItemsCart($event)' 
     @howmanyEvent='addHowmany($event)'
-    @removeFromCart='removeItemsCart'
     :numItems='numItems'
     :merch='merch'
      
@@ -190,15 +192,7 @@ export default {
   computed:{
 
     // got to figure out why my refs qtycart is undefined 
-    trackQty:{
 
-      get() {
-        return this.$refs.qtyCart[0].value 
-      },
-      set(myVal){
-         return this.$refs.qtyCart[0].value = myVal
-      }
-    },
     itemPrice(){
        return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
     },
@@ -207,14 +201,23 @@ export default {
     }
   },
 
-  
+// ---------------------------------------------------------------------------------------------------------------------------
+  // in order to access the current iteration of a loop, you have to send it as a parametter in the function you want to excute, just like you would send current index or the $event. You do not have to use a for each loop or anything like that.
+
+// through the use of $event you can access a lot of usefull information like path, target, etc...
+
   methods:{
-    showError(){
-      console.log(this.newSize())
-    }
-    ,
+    trackQty(item,event){
+      
+
+      item.howMany = event.target.value
+      
+    },
+  //  -------------------------------------------------------------------------------------------------------
     
     addItemsCart(item){
+
+     
       
       if(item.selectedSize === ''){
        this.error = true
@@ -232,14 +235,14 @@ export default {
      
 
     },
-    trackQty(){
-     if (this.$refs.qtyCart[0].value >= 3){
-             console.log('mayor o igual a 3')
-     }
-     else {
-       console.log('es menor a 3')
-     }
-   },
+  //   trackQty(){
+  //    if (this.$refs.qtyCart[0].value >= 3){
+  //            console.log('mayor o igual a 3')
+  //    }
+  //    else {
+  //      console.log('es menor a 3')
+  //    }
+  //  },
      addHowmany(qty){
     this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
     if(qty >= 3){
@@ -247,12 +250,7 @@ export default {
     }
      }
     ,
-    removeItemsCart(){
-      if(this.numItems > 0){
 
-        
-      }
-    },
 
     showCart(){
       this.modal = !this.modal
