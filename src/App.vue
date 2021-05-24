@@ -52,10 +52,11 @@
 
          <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
          <p v-if="item.howMany >= 3 || showDiscount >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p>
+         
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.howMany >= 3  || showDiscount >= 3 "> Discounted price: ${{itemDiscount}}</p>
+         <p v-if="item.howMany >= 3 || showDiscount >= 3 "> Discounted price: ${{itemDiscount}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
@@ -63,7 +64,7 @@
          <input @click="trackQty($event)" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
 
          </div>
-        
+        <p>{{showDiscount}}</p>
 
 
 
@@ -189,26 +190,7 @@ export default {
     }
   },
 
-  computed:{
-    showDiscount:{
-      discount: 0,
-      get(){
-        return discount
-      },
-      set(newVal){
-         return discount = newVal
-      }
-    },
 
-    // got to figure out why my refs qtycart is undefined 
-
-    itemPrice(){
-       return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
-    },
-    itemDiscount(){
-      return this.merch[0].variants[this.merch[0].selectedVariant].discount
-    }
-  },
 
 // ---------------------------------------------------------------------------------------------------------------------------
   // in order to access the current iteration of a loop, you have to send it as a parametter in the function you want to excute, just like you would send current index or the $event. You do not have to use a for each loop or anything like that.
@@ -254,12 +236,11 @@ export default {
   //  },
      addHowmany(qty){
     this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
-    if(qty >= 3){
-      this.merch[0].variants[this.merch[0].selectedVariant].variantBool = true
-    }
-     }
-    ,
-
+    // if(qty >= 3){
+    //   this.merch[0].variants[this.merch[0].selectedVariant].variantBool = true
+    // }
+     },
+  
 
     showCart(){
       this.modal = !this.modal
@@ -270,7 +251,27 @@ export default {
     delItemFromCart(index){
       this.numItems.splice(index,1)
     }
-  }
+  },
+    computed:{
+    showDiscount:{
+      discount: 0,
+      get(){
+        return this.discount
+      },
+      set(newVal){
+         return this.discount = newVal
+      }
+    },
+
+    // got to figure out why my refs qtycart is undefined 
+
+    itemPrice(){
+       return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
+    },
+    itemDiscount(){
+      return this.merch[0].variants[this.merch[0].selectedVariant].discount
+    }
+  },
 }
 </script>
 

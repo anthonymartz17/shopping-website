@@ -40,7 +40,8 @@
            <option v-for="option in selectSize" :key= "option.id">{{option.size}}</option>
          </select>
          <div>
-          <label >Quantity: </label>
+           
+          <label >Quantity:</label>
          <input ref="Qty" type="number" value="1" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
          </div>
           <div class="variant-container">
