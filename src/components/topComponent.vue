@@ -145,9 +145,15 @@ export default {
   },
  
    addToCart(){
-     this.$emit('addToCartEvent',this.merch[0].variants[this.merch[0].selectedVariant])
+
+     this.merch[0].variants[this.merch[0].selectedVariant].howMany = this.$refs.Qty[0].value
      
-     this.$emit('howmanyEvent',this.$refs.Qty[0].value)
+     this.$emit('addToCartEvent',this.merch[0].variants[this.merch[0].selectedVariant])
+
+
+
+     
+    //  this.$emit('howmanyEvent',this.$refs.Qty[0].value)
     
     //  this.$emit('sizeEvent', this.sizeChoice)
 

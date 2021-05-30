@@ -32,16 +32,16 @@
         <i @click="showCart" class="fa-2x far fa-window-close"></i>
               <P class="empty-cart" v-show="numItems.length == 0">Your cart is empty</P>
 
-        <div class="cartContentItem" v-for="(item, index) in numItems" :key="item.numId">
+        <div class="cartContentItem" v-for="(item, index) in numItems" :key="item.id">
 
           <div class="cartContentItemImg">
-          <img width="150px" :src="item.variantImg" alt="tshirt">
+          <img width="150px" :src="item.img" alt="tshirt">
           </div>
           <div class="cartContentItemDescription">
-         <p>{{merch[0].item}}</p>
-        <span>Size: {{item.selectedSize}}</span>
+         <p>{{item.item}}</p>
+        <span>Size: {{item.sizeSelected}}</span>
 
-         <p > Material: {{item.variantMaterial}}</p>
+         <p > Material: {{item.material}}</p>
 
 <!-- ----------------prices and discounts-------------------------------------------------- -->
 <!-- 
@@ -51,17 +51,20 @@
   -->
 
          <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
-         <p v-if="item.howMany >= 3 || showDiscount >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p>
+         <p v-if="item.amount >= 3 || merch[0].variants[merch[0].selectedVariant].howMany >= 3 " class="discountedPrice" > price: ${{item.priceRegular}}</p>
          
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.howMany >= 3 || showDiscount >= 3 "> Discounted price: ${{itemDiscount}}</p>
+         <p v-if="item.amount >= 3 || merch[0].variants[merch[0].selectedVariant].howMany >= 3 "> Discounted price: ${{item.discountedPrice}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
           <!-- to be able to access the current target and current iteration, I sent both as arguments of the function i want to excute -->
-         <input @click="trackQty($event)" type="number" :value="item.howMany" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+
+          <!-- the function 'trackQty()' keeps track of the value of this input element. this is to know whether 3 or more items are being added so the discount could be activated. -->
+         <input @click="trackQty($event)" type="number" :value="item.amount" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         
 
          </div>
         <p>{{showDiscount}}</p>
@@ -78,7 +81,7 @@
 <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
 
-
+<!--  @howmanyEvent='addHowmany($event)' -->
 
     </div>
 
@@ -87,7 +90,7 @@
    <top-com
 
     @addToCartEvent='addItemsCart($event)' 
-    @howmanyEvent='addHowmany($event)'
+   
     :numItems='numItems'
     :merch='merch'
      
@@ -126,6 +129,7 @@ export default {
     variants:[
 
       {
+        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
         variantId:2234,
         variantColorCode:'#a4ebf3',
         variantImg: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
@@ -143,6 +147,7 @@ export default {
     ],
       },
       {
+        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
         variantId:2235,
         variantColorCode:'#000000',
         variantImg: 'https://cdni.llbean.net/is/image/wim/240624_1_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
@@ -162,6 +167,7 @@ export default {
 
       },
       {
+        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
         variantId:2236,
         variantColorCode:'#ffac41',
         variantImg: 'https://cdni.llbean.net/is/image/wim/240624_33409_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
@@ -199,17 +205,19 @@ export default {
 
   methods:{
     trackQty(event){
-    this.showDiscount = event.target.value
+  this.merch[0].variants[this.merch[0].selectedVariant].howMany = event.target.value
+ 
 
-       
+      
       
     },
   //  -------------------------------------------------------------------------------------------------------
-    
+   
     addItemsCart(item){
-
+ // the conditional 'If' of  this funtion 'addItemsCart(item)' keeps track of whether a size was selected or not in order to show the error msg that a size must be selected.
+    // the parameter it receives, is the selected variant or item which is an object with all the properties of the variant or item.
      
-      
+      // the else part, adds an object with the values of the properties of the current iteration for the item to be added to the cart. This way, in each iteration, each item will have their own unique property values.
       if(item.selectedSize === ''){
        this.error = true
 
@@ -218,8 +226,32 @@ export default {
        }, 4000);
       }
       else{
+         
+        
+        this.numItems.push(
 
-        this.numItems.push(item)   
+        {
+
+          
+          item: this.merch[0].variants[this.merch[0].selectedVariant].item,
+
+          colorCode: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode,
+          
+          img: this.merch[0].variants[this.merch[0].selectedVariant].variantImg,
+
+          material: this.merch[0].variants[this.merch[0].selectedVariant].variantMaterial,
+
+          priceRegular: this.merch[0].variants[this.merch[0].selectedVariant].variantPrice,
+
+          discountedPrice: this.merch[0].variants[this.merch[0].selectedVariant].discount,
+
+          amount: this.merch[0].variants[this.merch[0].selectedVariant].howMany,
+
+          sizeSelected:this.merch[0].variants[this.merch[0].selectedVariant].selectedSize,          
+          
+          }
+
+        )   
       }
 
      
@@ -234,12 +266,11 @@ export default {
   //      console.log('es menor a 3')
   //    }
   //  },
-     addHowmany(qty){
-    this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
-    // if(qty >= 3){
-    //   this.merch[0].variants[this.merch[0].selectedVariant].variantBool = true
-    // }
-     },
+    //  addHowmany(qty){
+    // this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
+    // console.log(this.merch[0].variants[this.merch[0].selectedVariant].howMany)
+   
+    //  },
   
 
     showCart(){
@@ -253,6 +284,7 @@ export default {
     }
   },
     computed:{
+
     showDiscount:{
       discount: 0,
       get(){
