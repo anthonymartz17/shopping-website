@@ -51,19 +51,19 @@
   -->
 
          <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
-         <p v-if="item.amount >= 3 || merch[0].variants[merch[0].selectedVariant].howMany >= 3 " class="discountedPrice" > price: ${{item.priceRegular}}</p>
+         <p v-if="item.amount >= 3 " class="discountedPrice" > price: ${{item.priceRegular}}</p>
          
 
          <p v-else > price: ${{itemPrice}}</p>
 
-         <p v-if="item.amount >= 3 || merch[0].variants[merch[0].selectedVariant].howMany >= 3 "> Discounted price: ${{item.discountedPrice}}</p>
+         <p v-if="item.amount >= 3 "> Discounted price: ${{item.discountedPrice}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
           <div>
           <label >Quantity: </label>
           <!-- to be able to access the current target and current iteration, I sent both as arguments of the function i want to excute -->
 
           <!-- the function 'trackQty()' keeps track of the value of this input element. this is to know whether 3 or more items are being added so the discount could be activated. -->
-         <input @click="trackQty($event)" type="number" :value="item.amount" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         <input @click="trackQty($event,index)" type="number" :value="item.amount" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
          
 
          </div>
@@ -204,10 +204,10 @@ export default {
 // through the use of $event you can access a lot of usefull information like path, target, etc...
 
   methods:{
-    trackQty(event){
-  this.merch[0].variants[this.merch[0].selectedVariant].howMany = event.target.value
+    trackQty(event,index){
+  // this.merch[0].variants[this.merch[0].selectedVariant].howMany = event.target.value
  
-
+    this.numItems[index].amount = event.target.value
       
       
     },
@@ -258,19 +258,7 @@ export default {
      
 
     },
-  //   trackQty(){
-  //    if (this.$refs.qtyCart[0].value >= 3){
-  //            console.log('mayor o igual a 3')
-  //    }
-  //    else {
-  //      console.log('es menor a 3')
-  //    }
-  //  },
-    //  addHowmany(qty){
-    // this.merch[0].variants[this.merch[0].selectedVariant].howMany = qty
-    // console.log(this.merch[0].variants[this.merch[0].selectedVariant].howMany)
-   
-    //  },
+
   
 
     showCart(){
