@@ -9,10 +9,7 @@
          <img width="400px"   :src="image" alt="tshirt">
         
          <div class="details">
-         <!-- <p v-if="m.inventory  >= 5">In stock</p>
-         <p v-else-if="m.inventory > 0 && m.inventory <= 4">almost out stock</p>
-         <p v-else>sold out</p> -->
-
+         
          <p>{{m.item}}</p>
          <p>{{material}}</p>
          <p :class="{discount:m.show}">${{m.price}}</p> 
@@ -127,12 +124,7 @@ export default {
    selectSize(){
      return this.merch[0].variants[this.merch[0].selectedVariant].sizes
    },   
-  //  sizeSelected(){
-  //    let selected = this.merch[0].variants[this.merch[0].selectedVariant].selectedSize
-  //   this.$emit('sizeChoice', selected)
-  //   return selected
-     
-  //  }
+
  },
  methods:{
 
@@ -150,12 +142,6 @@ export default {
      
      this.$emit('addToCartEvent',this.merch[0].variants[this.merch[0].selectedVariant])
 
-
-
-     
-    //  this.$emit('howmanyEvent',this.$refs.Qty[0].value)
-    
-    //  this.$emit('sizeEvent', this.sizeChoice)
 
     
   

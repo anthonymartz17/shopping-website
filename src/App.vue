@@ -50,7 +50,7 @@
   *** in order to show a discounted price and put a linethrough through the regular price, two p tags were used with conditional renderings. this allows me to show the regular price or the regular price with a linethrough and the discounted price, depending on the amount of items of the same kind added to the cart.
   -->
 
-         <!-- <p v-if="item.howMany >= 3 || trackQty >= 3 " class="discountedPrice" > price: ${{itemPrice}}</p> -->
+        
          <p v-if="item.amount >= 3 " class="discountedPrice" > price: ${{item.priceRegular}}</p>
          
 
@@ -80,8 +80,6 @@
       </div>
 <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
-
-<!--  @howmanyEvent='addHowmany($event)' -->
 
     </div>
 
@@ -205,8 +203,8 @@ export default {
 
   methods:{
     trackQty(event,index){
-  // this.merch[0].variants[this.merch[0].selectedVariant].howMany = event.target.value
- 
+  
+    // this line updates the value of the property 'amount' of the objects pushed to the 'numItems' array so that the discounted price could show from the cart when the quantity input value is changed.
     this.numItems[index].amount = event.target.value
       
       
@@ -283,7 +281,7 @@ export default {
       }
     },
 
-    // got to figure out why my refs qtycart is undefined 
+    
 
     itemPrice(){
        return this.merch[0].variants[this.merch[0].selectedVariant].variantPrice
@@ -385,10 +383,10 @@ export default {
   
 }
 .cartContentItemImg{
-/* border: 1px solid red; */
+
 }
 .cartContentItemDescription{
-/* border: 1px solid blue; */
+
 display: flex;
 flex-direction: column;
 gap: .5em;
@@ -396,7 +394,7 @@ justify-content: center;
 }
 .discountedPrice{
   text-decoration: line-through;
-  /* align-self: center; */
+  
 }
 
 .del-item-btn{
