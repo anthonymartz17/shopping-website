@@ -223,14 +223,12 @@ export default {
          this.error = false
        }, 4000);
       }
+
+
+
       else{
-         
-        
-        this.numItems.push(
-
-        {
-
-          
+        let newArray = {
+           
           item: this.merch[0].variants[this.merch[0].selectedVariant].item,
 
           colorCode: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode,
@@ -243,13 +241,43 @@ export default {
 
           discountedPrice: this.merch[0].variants[this.merch[0].selectedVariant].discount,
 
-          amount: this.merch[0].variants[this.merch[0].selectedVariant].howMany,
+          amount: +this.merch[0].variants[this.merch[0].selectedVariant].howMany,
 
-          sizeSelected:this.merch[0].variants[this.merch[0].selectedVariant].selectedSize,          
+          sizeSelected:this.merch[0].variants[this.merch[0].selectedVariant].selectedSize,   
           
+          color: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode
+        }
+
+// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newArray amount and just adding is to the existing object amount. this to not have duplicate objects with the same color and size. 
+
+  // however, there is a problem, since im pushing the 'newArray' object from 
+        // if(this.numItems.length != 0){
+          if(this.numItems.length === 0){
+
+             this.numItems.push(newArray) 
           }
 
-        )   
+       
+    else { 
+       this.numItems.forEach(one =>{
+         
+         if(one.color === this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode && one.sizeSelected === this.merch[0].variants[this.merch[0].selectedVariant].selectedSize){
+
+         
+
+            one.amount = one.amount + newArray.amount
+
+         
+
+         }
+          
+
+         
+       })}
+       
+        
+
+      
       }
 
      
@@ -382,9 +410,7 @@ export default {
   
   
 }
-.cartContentItemImg{
 
-}
 .cartContentItemDescription{
 
 display: flex;
