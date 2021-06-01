@@ -227,7 +227,8 @@ export default {
 
 
       else{
-        let newArray = {
+        
+        let newObject = {
            
           item: this.merch[0].variants[this.merch[0].selectedVariant].item,
 
@@ -245,16 +246,18 @@ export default {
 
           sizeSelected:this.merch[0].variants[this.merch[0].selectedVariant].selectedSize,   
           
-          color: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode
+          color: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode,
+
+          objExits: false
         }
 
-// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newArray amount and just adding is to the existing object amount. this to not have duplicate objects with the same color and size. 
+// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newObject amount and just adding is to the existing object amount. this to not have duplicate objects with the same color and size. 
 
   // however, there is a problem, since im pushing the 'newArray' object from 
-        // if(this.numItems.length != 0){
+        
           if(this.numItems.length === 0){
 
-             this.numItems.push(newArray) 
+             this.numItems.push(newObject) 
           }
 
        
@@ -265,9 +268,11 @@ export default {
 
          
 
-            one.amount = one.amount + newArray.amount
+            one.amount = one.amount + newObject.amount
 
-         
+             newObject.objExits = true
+
+             
 
          }
           
@@ -275,7 +280,13 @@ export default {
          
        })}
        
-        
+       if(newObject.objExits === false && this.numItems.length != 0){
+
+     this.numItems.push(newObject)
+ 
+
+
+       }        
 
       
       }
