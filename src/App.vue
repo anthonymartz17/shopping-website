@@ -10,7 +10,8 @@
 
   *** the boolean property 'error' works for both, the v-show and the bounded class ' errorMsg'.
  -->
-<div v-show="error" :class="{errorMsg:error}">
+ <!-- by default, the errorMsg class has a red background, however, in order to use the same class but with a different background, im binding a style attribute. inside the style attribute im setting the value of the background property, to a computed property that determines which color will be given to the background  -->
+<div v-show="error" :class="{errorMsg:error}" :style="{background: backgroundForMsg}">
   <p>{{msg}}</p>
 </div>
 <!-- ------------------------------------------------------------------------- -->
@@ -113,6 +114,7 @@ export default {
      numId:10,
      modal:false,
      msg:'Please select a size',
+     whichMsg:0,
      error:false,
 
         merch:[
@@ -251,17 +253,12 @@ export default {
           objExits: false
         }
 
-// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newObject amount and just adding is to the existing object amount. this to not have duplicate objects with the same color and size. 
+// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newObject amount and just adding is to the existing object amount. this is to not have duplicate objects with the same color and size. 
 
-  // however, there is a problem, since im pushing the 'newArray' object from 
+  
         
-          if(this.numItems.length === 0){
+          if(this.numItems.length != 0){
 
-             this.numItems.push(newObject) 
-          }
-
-       
-    else { 
        this.numItems.forEach(one =>{
          
          if(one.color === this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode && one.sizeSelected === this.merch[0].variants[this.merch[0].selectedVariant].selectedSize){
@@ -272,6 +269,17 @@ export default {
 
              newObject.objExits = true
 
+            //  using the which msg property to determing the color of the background and the msg that will be used with the class error to show a msg alert. in this case, im changing the value of 'which msg ' to 1 to later say, if whichMsg is equal to 1 then the background color will be such.
+
+             this.whichMsg = 1
+
+             this.msg = 'added to existing Item'
+
+             this.error = true
+              setTimeout(() => {
+         this.error = false
+       }, 4000);
+
              
 
          }
@@ -280,10 +288,18 @@ export default {
          
        })}
        
-       if(newObject.objExits === false && this.numItems.length != 0){
+       if(newObject.objExits === false || this.numItems.length === 0){
 
      this.numItems.push(newObject)
- 
+
+            this.whichMsg = 2
+
+             this.msg = 'New Item Added'
+
+             this.error = true
+              setTimeout(() => {
+         this.error = false
+       }, 4000);
 
 
        }        
@@ -309,7 +325,15 @@ export default {
     }
   },
     computed:{
-
+// this computed property 'backgroundForMsg, helps me determine the color of the background for my style binding. in this case, if I want the background of the msg that drops down orange, i have to make whichMsg equals 1. on the other hand, if I want the background to be green then the property whichMsg has to be equal to 2'
+    backgroundForMsg(){
+      if(this.whichMsg === 1){
+        return 'orange'
+      }
+      if(this.whichMsg === 2){
+        return 'green'
+      }
+    },
     showDiscount:{
       discount: 0,
       get(){
