@@ -273,7 +273,7 @@ export default {
 
              this.whichMsg = 1
 
-             this.msg = 'added to existing Item'
+             this.msg = 'Added to Existing Item'
 
              this.error = true
               setTimeout(() => {
