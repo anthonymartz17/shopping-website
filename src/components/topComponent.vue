@@ -4,14 +4,14 @@
     
     
     <ul class="ul-container">
-       <li class="item"  v-for="m in merch" :key="m.id">
+       <li class="item"  v-for="m in $store.state.merch" :key="m.id">
          
-         <img width="400px"   :src="image" alt="tshirt">
+         <img width="400px"   :src=" $store.state.image" alt="tshirt">
         
          <div class="details">
          
          <p>{{m.item}}</p>
-         <p>{{material}}</p>
+         <p>{{ $store.state.material}}</p>
          <p :class="{discount:m.show}">${{m.price}}</p> 
          <p v-show="m.show">${{m.discount}}</p> 
          <span>size: </span>
@@ -30,16 +30,16 @@
          -->
 
 
-         <select v-model="sizeChoice">
+         <select v-model=" $store.state.sizeChoice">
            <option disabled selected value="">Please select</option>
 
            <!-- here im using the computed property (selectSize) which contains the array (sizes) of each individual tshirt -->
-           <option v-for="option in selectSize" :key= "option.id">{{option.size}}</option>
+           <option v-for="option in  $store.state.selectSize" :key= "option.id">{{option.size}}</option>
          </select>
          <div>
            
           <label >Quantity:</label>
-         <input ref="Qty" type="number" value="1" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         <input ref="Qty" type="number" value="1" min="1" :max=" $store.state.merch[0].variants[merch[0].selectedVariant].inventory">
          </div>
           <div class="variant-container">
          
@@ -53,7 +53,7 @@
 
          </div>
           <div class="btns">
-            <button :disabled='!instock'  @click="addToCart" class="btn add-btn">Add to cart</button>
+            <button :disabled='!$store.state.instock'  @click="addToCart" class="btn add-btn">Add to cart</button>
            
 
             
@@ -83,7 +83,7 @@ export default {
  data(){
    return{
 
-     instock: true,
+    
       
     
  
@@ -197,6 +197,7 @@ export default {
   list-style: none;
   display: flex;
   align-items: center;
+
   
   
 
@@ -228,6 +229,7 @@ export default {
   border: 1px solid;
   width: 2em;
   height: 2em;
+  cursor: pointer;
   
 }
 

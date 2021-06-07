@@ -11,8 +11,8 @@
   *** the boolean property 'error' works for both, the v-show and the bounded class ' errorMsg'.
  -->
  <!-- by default, the errorMsg class has a red background, however, in order to use the same class but with a different background, im binding a style attribute. inside the style attribute im setting the value of the background property, to a computed property that determines which color will be given to the background  -->
-<div v-show="error" :class="{errorMsg:error}" :style="{background: backgroundForMsg}">
-  <p>{{msg}}</p>
+<div v-show="$store.state.error" :class="{errorMsg:$store.state.error}" :style="{background: $store.state.backgroundForMsg}">
+  <p>{{$store.state.msg}}</p>
 </div>
 <!-- ------------------------------------------------------------------------- -->
     
@@ -23,7 +23,7 @@
        @click="showCart"
     ></cart-comp>
 
-    <div class="cartModal" v-show="modal" >
+    <div class="cartModal" v-show="$store.state.modal" >
 
    
 
@@ -31,12 +31,12 @@
 
       <div class="cartContent">
         <i @click="showCart" class="fa-2x far fa-window-close"></i>
-              <P class="empty-cart" v-show="numItems.length == 0">Your cart is empty</P>
+              <P class="empty-cart" v-show="$store.state.numItems.length == 0">Your cart is empty</P>
 
-        <div class="cartContentItem" v-for="(item, index) in numItems" :key="item.id">
+        <div class="cartContentItem" v-for="(item, index) in $store.state.numItems" :key="item.id">
 
           <div class="cartContentItemImg">
-          <img width="150px" :src="item.img" alt="tshirt">
+          <img width="150px" :src="$store.state.item.img" alt="tshirt">
           </div>
           <div class="cartContentItemDescription">
          <p>{{item.item}}</p>
@@ -55,7 +55,7 @@
          <p v-if="item.amount >= 3 " class="discountedPrice" > price: ${{item.priceRegular}}</p>
          
 
-         <p v-else > price: ${{itemPrice}}</p>
+         <p v-else > price: ${{$store.state.itemPrice}}</p>
 
          <p v-if="item.amount >= 3 "> Discounted price: ${{item.discountedPrice}}</p>
 <!-- -------------------------------------------------------------------------------------------- -->
@@ -64,11 +64,11 @@
           <!-- to be able to access the current target and current iteration, I sent both as arguments of the function i want to excute -->
 
           <!-- the function 'trackQty()' keeps track of the value of this input element. this is to know whether 3 or more items are being added so the discount could be activated. -->
-         <input @click="trackQty($event,index)" type="number" :value="item.amount" min="1" :max="merch[0].variants[merch[0].selectedVariant].inventory">
+         <input @click="$store.commit(trackQty($event,index))" type="number" :value="item.amount" min="1" :max="$store.state.merch[0].variants[merch[0].selectedVariant].inventory">
          
 
          </div>
-        <p>{{showDiscount}}</p>
+        <p>{{$store.state.showDiscount}}</p>
 
 
 
@@ -108,93 +108,7 @@ export default {
 
   name: 'App',
   
-  data(){
-    return{
-     numItems: [],
-     numId:10,
-     modal:false,
-     msg:'Please select a size',
-     whichMsg:0,
-     error:false,
 
-        merch:[
-
-    {item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
-    id:1,
-    price:19.95, 
-    salePrice:11.99,
-    show:false,
-    selectedVariant:0,
-    TheSize:'',
-    variants:[
-
-      {
-        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
-        variantId:2234,
-        variantColorCode:'#a4ebf3',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_4094_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'Cotton',
-        howMany: 0,
-        inventory: 10,
-        variantPrice:19.95, 
-         discount:16.99,
-         variantBool: false,
-         selectedSize:'',
-         sizes:[
-      {size:'Small', id: 1,},
-      {size:'Medium', id: 2,},
-      {size:'Large', id: 3,}
-    ],
-      },
-      {
-        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
-        variantId:2235,
-        variantColorCode:'#000000',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_1_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'silk',
-        inventory:15,
-        howMany: 0,
-         variantPrice:19.95, 
-         discount:16.99,
-         variantBool: false,
-         selectedSize:'',
-         sizes:[
-      {size:'Small', id: 1,},
-      {size:'Medium', id: 2,},
-      {size:'Large', id: 3,},
-      
-    ],
-
-      },
-      {
-        item:"Men's Carefree Unshrinkable Tee, Traditional Fit Short-Sleeve",
-        variantId:2236,
-        variantColorCode:'#ffac41',
-        variantImg: 'https://cdni.llbean.net/is/image/wim/240624_33409_41?hei=764&wid=665&resMode=sharp2&defaultImage=llbstage/A0211793_2',
-        variantMaterial:'wool',
-        inventory:20,
-        howMany: 0,
-        variantPrice:19.95, 
-         discount:16.99,
-         variantBool: false,
-         selectedSize:'',
-         sizes:[
-      {size:'Small', id: 1,},
-      {size:'Medium', id: 2,},
-      {size:'Large', id: 3,}
-    ],
-
-      },
-   
-    ],
-
-    },
-
-   
-  ]
-     
-    }
-  },
 
 
 
@@ -204,125 +118,7 @@ export default {
 // through the use of $event you can access a lot of usefull information like path, target, etc...
 
   methods:{
-    trackQty(event,index){
-  
-    // this line updates the value of the property 'amount' of the objects pushed to the 'numItems' array so that the discounted price could show from the cart when the quantity input value is changed.
-    this.numItems[index].amount = event.target.value
-      
-      
-    },
-  //  -------------------------------------------------------------------------------------------------------
-   
-    addItemsCart(item){
- // the conditional 'If' of  this funtion 'addItemsCart(item)' keeps track of whether a size was selected or not in order to show the error msg that a size must be selected.
-    // the parameter it receives, is the selected variant or item which is an object with all the properties of the variant or item.
-     
-      // the else part, adds an object with the values of the properties of the current iteration for the item to be added to the cart. This way, in each iteration, each item will have their own unique property values.
-      if(item.selectedSize === ''){
-       this.error = true
 
-       setTimeout(() => {
-         this.error = false
-       }, 4000);
-      }
-
-
-
-      else{
-        
-        let newObject = {
-           
-          item: this.merch[0].variants[this.merch[0].selectedVariant].item,
-
-          colorCode: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode,
-          
-          img: this.merch[0].variants[this.merch[0].selectedVariant].variantImg,
-
-          material: this.merch[0].variants[this.merch[0].selectedVariant].variantMaterial,
-
-          priceRegular: this.merch[0].variants[this.merch[0].selectedVariant].variantPrice,
-
-          discountedPrice: this.merch[0].variants[this.merch[0].selectedVariant].discount,
-
-          amount: +this.merch[0].variants[this.merch[0].selectedVariant].howMany,
-
-          sizeSelected:this.merch[0].variants[this.merch[0].selectedVariant].selectedSize,   
-          
-          color: this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode,
-
-          objExits: false
-        }
-
-// here im looping through the existing objects in the array 'numItems' whenever there are any in it. this in order to validate whether the object with the same size and color alreay exists. if it exists, im taking the newObject amount and just adding is to the existing object amount. this is to not have duplicate objects with the same color and size. 
-
-  
-        
-          if(this.numItems.length != 0){
-
-       this.numItems.forEach(one =>{
-         
-         if(one.color === this.merch[0].variants[this.merch[0].selectedVariant].variantColorCode && one.sizeSelected === this.merch[0].variants[this.merch[0].selectedVariant].selectedSize){
-
-         
-
-            one.amount = one.amount + newObject.amount
-
-             newObject.objExits = true
-
-            //  using the which msg property to determing the color of the background and the msg that will be used with the class error to show a msg alert. in this case, im changing the value of 'which msg ' to 1 to later say, if whichMsg is equal to 1 then the background color will be such.
-
-             this.whichMsg = 1
-
-             this.msg = 'Added to Existing Item'
-
-             this.error = true
-              setTimeout(() => {
-         this.error = false
-       }, 4000);
-
-             
-
-         }
-          
-
-         
-       })}
-       
-       if(newObject.objExits === false || this.numItems.length === 0){
-
-     this.numItems.push(newObject)
-
-            this.whichMsg = 2
-
-             this.msg = 'New Item Added'
-
-             this.error = true
-              setTimeout(() => {
-         this.error = false
-       }, 4000);
-
-
-       }        
-
-      
-      }
-
-     
-     
-
-    },
-
-  
-
-    showCart(){
-      this.modal = !this.modal
-    
-      
-    },
-
-    delItemFromCart(index){
-      this.numItems.splice(index,1)
-    }
   },
     computed:{
 // this computed property 'backgroundForMsg, helps me determine the color of the background for my style binding. in this case, if I want the background of the msg that drops down orange, i have to make whichMsg equals 1. on the other hand, if I want the background to be green then the property whichMsg has to be equal to 2'
